@@ -14,4 +14,12 @@ secrets = {
 ```
 
 ## Use
-TBD
+e.g.
+```python
+from circuitpython_email import smtp
+smtp.send(
+    to="destination@other.com",  # email ourselves!
+    subject="Hello, World!",
+    body="Hello from a CircuitPython device!",
+)
+```
