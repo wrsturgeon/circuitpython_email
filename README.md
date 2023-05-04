@@ -8,6 +8,8 @@ Write a `secrets.py` file in this directory, formatted like this:
 secrets = {
     "email": "address@site.com",
     "password": "S3cureP@ssw0rd",
+    "host": "smtp.gmail.com",
+    "port": 465, # Gmail's required SSL port
 }
 ```
 

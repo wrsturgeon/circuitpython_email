@@ -5,20 +5,51 @@
 
 # Requires a `secrets.py` file--see the README.
 
-import time
 import wifi
 import socketpool
+import ssl
+import sys
 
-from secrets import secrets
+from secrets import secrets  # Your file!
+host = secrets["host"]
+port = secrets["port"]
+
+
+import smtplib
+context = ssl.create_default_context()
+# with smtplib.SMTP_SSL(host=host, port=port, context=context) as server:
+# ==> smtplib.SMTP.__init__(self, host, port, local_hostname, timeout, source_address)
+# ==>
+# (code, msg) = self.connect(secrets["host"], secrets["port"])
+# self.sock = self._get_socket(host, port, self.timeout)
+# (code, msg) = self.getreply()
+# if code != 220:
+#     self.close()
+#     raise SMTPConnectError(code, msg)
+# # RFC 2821 says we should use the fqdn in the EHLO/HELO verb, and
+# # if that can't be calculated, that we should use a domain literal
+# # instead (essentially an encoded IP address like [A.B.C.D]).
+# fqdn = socket.getfqdn()
+# if '.' in fqdn:
+#     self.local_hostname = fqdn
+# else:
+#     # We can't find an fqdn hostname, so use a domain literal
+#     addr = '127.0.0.1'
+#     try:
+#         addr = socket.gethostbyname(socket.gethostname())
+#     except socket.gaierror:
+#         pass
+#     self.local_hostname = '[%s]' % addr
+
 
 
 def mail_open_socket():
-    server = secrets["smtp_server"]
-    print("Connecting to mail server ", server)
+    print("Connecting to", secrets["smtp_server"])
     pool = socketpool.SocketPool(wifi.radio)
     sock = pool.socket()
-    addr = (server, 25)
-    sock.connect(addr)
+    addr = (secrets["smtp_server"], 25)
+    response = sock.connect(addr)
+    print(response)
     return sock
 
 
@@ -35,26 +66,23 @@ def mail_rxtx(s, msg):
     return x
 
 
-def mail_send(m_subj, m_msg):
-    m_from = secrets["mail_from"]
-    m_to = secrets["mail_to"]
-
+def mail_send(to, subject, body):
     s = mail_open_socket()
     mail_rxtx(s, None)
     mail_rxtx(s, "HELO pico")
-    mail_rxtx(s, "MAIL FROM:{}".format(m_from))
-    mail_rxtx(s, "RCPT TO:{}".format(m_to))
+    mail_rxtx(s, "MAIL FROM:{}".format(secrets["email"]))
+    mail_rxtx(s, "RCPT TO:{}".format(to))
     mail_rxtx(s, "DATA")
     mail_rxtx(
-        s, "From: {}\nTo: {}\nSubject: {}\n\n{}\n.".format(m_from, m_to, m_subj, m_msg)
+        s,
+        "From: {}\nTo: {}\nSubject: {}\n\n{}\n.".format(
+            secrets["email"], to, subject, body
+        ),
     )
 
 
-print("connect to wifi")
-wifi_connect()
-time.sleep(sleep_time)
-
-print("Send email")
-m_subj = "Hello World!"
-m_msg = "Your text goes here"
-mail_send(m_subj, m_msg)
+mail_send(
+    to=secrets["email"],  # email ourselves!
+    subject="Hello, World!",
+    body="Hello from your CircuitPython device!",
+)
