@@ -24,15 +24,18 @@ def init_connection():
 
 
 def rxtx(s, msg):
-    if msg is not None:
-        print("> " + msg)
+    print("Exchanging data:")
+    if msg is None:
+        print("    [no data sent; receiving only]")
+    else:
+        print("    >>> " + msg)
         s.send(msg.encode("ascii") + b"\n")
 
     buff_size = 1024
     buff = bytearray(buff_size)
     s.recv_into(buff)
     x = buff.decode("ascii")
-    print("< " + x.rstrip())
+    print("    <<< " + x.rstrip())
     return x
 
 
