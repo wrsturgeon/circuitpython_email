@@ -42,17 +42,16 @@ context = ssl.create_default_context()
 
 
 
-def mail_open_socket():
+def connect():
     print("Connecting to", secrets["host"])
     pool = socketpool.SocketPool(wifi.radio)
     socket = pool.socket()
-    addr = (secrets["host"], 25)
-    response = socket.connect(addr)
-    print(response)
+    addr = (secrets["host"], secrets["port"])
+    socket.connect(addr)
     return socket
 
 
-def mail_rxtx(s, msg):
+def rxtx(s, msg):
     if msg is not None:
         print("> " + msg)
         s.send(msg.encode("ascii") + b"\n")
@@ -65,14 +64,14 @@ def mail_rxtx(s, msg):
     return x
 
 
-def mail_send(to, subject, body):
-    socket = mail_open_socket()
-    mail_rxtx(socket, None)
-    mail_rxtx(socket, "HELO pico")
-    mail_rxtx(socket, "MAIL FROM:{}".format(secrets["email"]))
-    mail_rxtx(socket, "RCPT TO:{}".format(to))
-    mail_rxtx(socket, "DATA")
-    mail_rxtx(
+def send(to, subject, body):
+    socket = connect()
+    rxtx(socket, None)
+    rxtx(socket, "HELO pico")
+    rxtx(socket, "MAIL FROM:{}".format(secrets["email"]))
+    rxtx(socket, "RCPT TO:{}".format(to))
+    rxtx(socket, "DATA")
+    rxtx(
         socket,
         "From: {}\nTo: {}\nSubject: {}\n\n{}\n.".format(
             secrets["email"], to, subject, body
@@ -80,8 +79,8 @@ def mail_send(to, subject, body):
     )
 
 
-mail_send(
-    to=secrets["email"],  # email ourselves!
-    subject="Hello, World!",
-    body="Hello from your CircuitPython device!",
-)
+# send(
+#     to=secrets["email"],  # email ourselves!
+#     subject="Hello, World!",
+#     body="Hello from your CircuitPython device!",
+# )
