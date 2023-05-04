@@ -15,7 +15,6 @@ host = secrets["host"]
 port = secrets["port"]
 
 
-import smtplib
 context = ssl.create_default_context()
 # with smtplib.SMTP_SSL(host=host, port=port, context=context) as server:
 # ==> smtplib.SMTP.__init__(self, host, port, local_hostname, timeout, source_address)
