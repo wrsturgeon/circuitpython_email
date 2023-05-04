@@ -43,10 +43,10 @@ context = ssl.create_default_context()
 
 
 def mail_open_socket():
-    print("Connecting to", secrets["smtp_server"])
+    print("Connecting to", secrets["host"])
     pool = socketpool.SocketPool(wifi.radio)
     sock = pool.socket()
-    addr = (secrets["smtp_server"], 25)
+    addr = (secrets["host"], 25)
     response = sock.connect(addr)
     print(response)
     return sock
