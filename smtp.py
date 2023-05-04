@@ -45,11 +45,11 @@ context = ssl.create_default_context()
 def mail_open_socket():
     print("Connecting to", secrets["host"])
     pool = socketpool.SocketPool(wifi.radio)
-    sock = pool.socket()
+    socket = pool.socket()
     addr = (secrets["host"], 25)
-    response = sock.connect(addr)
+    response = socket.connect(addr)
     print(response)
-    return sock
+    return socket
 
 
 def mail_rxtx(s, msg):
@@ -66,14 +66,14 @@ def mail_rxtx(s, msg):
 
 
 def mail_send(to, subject, body):
-    s = mail_open_socket()
-    mail_rxtx(s, None)
-    mail_rxtx(s, "HELO pico")
-    mail_rxtx(s, "MAIL FROM:{}".format(secrets["email"]))
-    mail_rxtx(s, "RCPT TO:{}".format(to))
-    mail_rxtx(s, "DATA")
+    socket = mail_open_socket()
+    mail_rxtx(socket, None)
+    mail_rxtx(socket, "HELO pico")
+    mail_rxtx(socket, "MAIL FROM:{}".format(secrets["email"]))
+    mail_rxtx(socket, "RCPT TO:{}".format(to))
+    mail_rxtx(socket, "DATA")
     mail_rxtx(
-        s,
+        socket,
         "From: {}\nTo: {}\nSubject: {}\n\n{}\n.".format(
             secrets["email"], to, subject, body
         ),
