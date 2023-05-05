@@ -80,8 +80,8 @@ def send(socket, to, subject, body):
         email = secrets["email"]
         password = secrets["password"]
         rxtx(socket, "AUTH PLAIN")
-        rxtx(socket, base64.encode(email).decode('ascii'))
-        rxtx(socket, base64.encode(password).decode('ascii'))
+        rxtx(socket, base64.encode(email))
+        rxtx(socket, base64.encode(password))
     except Exception as e:
         print(e)
         time.sleep(5)
