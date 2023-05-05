@@ -5,7 +5,7 @@
 
 # Requires a `secrets.py` file--see the README.
 
-import base64
+from . import base64
 import socketpool
 import wifi
 
