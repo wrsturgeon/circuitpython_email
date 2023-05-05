@@ -17,7 +17,11 @@ secrets = {
 e.g.
 ```python
 from circuitpython_email import smtp
+pool = socketpool.SocketPool(wifi.radio)
+socket = pool.socket()
+smtp.init_connection(socket)
 smtp.send(
+    socket=socket,
     to="destination@other.com",  # email ourselves!
     subject="Hello, World!",
     body="Hello from a CircuitPython device!",
