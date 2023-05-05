@@ -25,27 +25,17 @@ def init_connection(socket) -> None:
 
 def rxtx(s, msg):
     print("Talking to the SMTP server:")
-    print('ASS')
     if msg is None:
-        print('HOLE')
         print("    [no data sent; waiting for the server to initiate]")
     else:
-        print('PLEASE')
         print("    >>> " + msg)
-        print('NOW')
         s.send(msg.encode("ascii") + b"\n")
-        print('BABY')
 
-    print('ENGADINE')
     buff_size = 1024
     buff = bytearray(buff_size)
-    print('MACCAS')
     s.recv_into(buff)
-    print('ADSFSOGDIH')
     x = buff.decode("ascii")
-    print('GDHKHKHG')
     print("    <<< " + x.rstrip())
-    print('HGJKDSH')
     return x
 
 
@@ -89,13 +79,9 @@ def send(socket, to, subject, body):
     try:
         email = secrets["email"]
         password = secrets["password"]
-        print('FUCK')
         rxtx(socket, "AUTH PLAIN")
-        print('ME')
         rxtx(socket, base64.encode(email))
-        print('IN')
         rxtx(socket, base64.encode(password))
-        print('THE')
     except Exception as e:
         print(e)
         time.sleep(5)

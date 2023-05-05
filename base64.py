@@ -11,9 +11,14 @@ def chunk(data, length):
 def encode(data):
     print("AAAAA")
     override = 0
+    print("AAAAB")
     if len(data) % 3 != 0:
+        print("AAAAC")
         override = (len(data) + 3 - len(data) % 3) - len(data)
+        print("AAAAD")
+    print("AAAAE")
     data += b"\x00" * override
+    print("AAAAF")
 
     print("BBBBB")
     threechunks = chunk(data, 3)
