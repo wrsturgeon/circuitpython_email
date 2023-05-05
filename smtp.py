@@ -5,8 +5,9 @@
 
 # Requires a `secrets.py` file--see the README.
 
-import wifi
+import base64
 import socketpool
+import wifi
 
 from secrets import secrets  # Your file!
 
@@ -79,8 +80,8 @@ def send(socket, to, subject, body):
         email = secrets["email"]
         password = secrets["password"]
         rxtx(socket, "AUTH PLAIN")
-        rxtx(socket, email)
-        rxtx(socket, password)
+        rxtx(socket, base64.encode(email))
+        rxtx(socket, base64.encode(password))
     except Exception:
         pass
     rxtx(socket, "MAIL FROM:{}".format(secrets["email"]))
