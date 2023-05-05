@@ -82,7 +82,7 @@ def send(socket, to, subject, body):
         rxtx(socket, "AUTH PLAIN")
         rxtx(socket, base64.encode(email))
         rxtx(socket, base64.encode(password))
-    except Exception:
+    except Exception as e:
         print(e)
         time.sleep(5)
         pass
