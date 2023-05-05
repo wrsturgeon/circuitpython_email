@@ -14,31 +14,6 @@ host = secrets["host"]
 port = secrets["port"]
 
 
-# Inlining `smtplib.SMTP_SSL.login`:
-# if not (200 <= self.ehlo()[0] <= 299):
-#     (code, resp) = self.helo()
-#     if not (200 <= code <= 299):
-#         raise SMTPHeloError(code, resp)
-# self.user, self.password = user, password
-# for authmethod in ["CRAM-MD5", "PLAIN", "LOGIN"]:
-#     method_name = "auth_" + authmethod.lower().replace("-", "_")
-#     try:
-#         (code, resp) = self.auth(
-#             authmethod,
-#             getattr(self, method_name),
-#             initial_response_ok=initial_response_ok,
-#         )
-#         # 235 == 'Authentication successful'
-#         # 503 == 'Error: already authenticated'
-#         if code in (235, 503):
-#             return (code, resp)
-#     except SMTPAuthenticationError as e:
-#         last_exception = e
-
-# # We could not login successfully.  Return result of last attempt.
-# raise last_exception
-
-
 def init_connection(socket) -> None:
     """Connects to the `host` defined in `secrets.py`."""
     print("Connecting to", secrets["host"])
@@ -67,6 +42,40 @@ def send(socket, to, subject, body):
     """Make sure to call `init_connection()` on `socket` at least once before!"""
     rxtx(socket, None)
     rxtx(socket, "HELO circuitpython_email")
+    # Inlining `login` from `smtplib`:
+    # for authmethod in ["CRAM-MD5", "PLAIN", "LOGIN"]:
+    #     method_name = "AUTH_" + authmethod.replace("-", "_")
+    #     try:
+    #         # (code, resp) = self.auth(
+    #         #     authmethod,
+    #         #     getattr(self, method_name),
+    #         #     initial_response_ok=initial_response_ok,
+    #         # )
+    #         authmethod = authmethod.upper()
+    #         initial_response = (authobject() if initial_response_ok else None)
+    #         if initial_response is not None:
+    #             response = encode_base64(initial_response.encode('ascii'), eol='')
+    #             (code, resp) = self.docmd("AUTH", authmethod + " " + response)
+    #         else:
+    #             (code, resp) = self.docmd("AUTH", authmethod)
+    #         # If server responds with a challenge, send the response.
+    #         if code == 334:
+    #             challenge = base64.decodebytes(resp)
+    #             response = encode_base64(
+    #                 authobject(challenge).encode('ascii'), eol='')
+    #             (code, resp) = self.docmd(response)
+    #         if code in (235, 503):
+    #             return (code, resp)
+    #         raise SMTPAuthenticationError(code, resp)
+    #         # 235 == 'Authentication successful'
+    #         # 503 == 'Error: already authenticated'
+    #         if code in (235, 503):
+    #             return (code, resp)
+    #     except SMTPAuthenticationError as e:
+    #         last_exception = e
+    # # We could not login successfully.  Return result of last attempt.
+    # raise last_exception
+    rxtx(socket, "AUTH PLAIN")
     rxtx(socket, "MAIL FROM:{}".format(secrets["email"]))
     rxtx(socket, "RCPT TO:{}".format(to))
     rxtx(socket, "DATA")
