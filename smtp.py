@@ -75,7 +75,8 @@ def send(socket, to, subject, body):
     # raise last_exception
     try:
         LOGIN_ENCRYPTED = secrets["login_encrypted"]
-        rxtx(socket, "AUTH PLAIN %s" % LOGIN_ENCRYPTED)
+        rxtx(socket, "AUTH PLAIN")
+        rxtx(socket, LOGIN_ENCRYPTED)
     except Exception as e:
         print(e)
         time.sleep(5)
