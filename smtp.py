@@ -78,7 +78,9 @@ def send(socket, to, subject, body):
     try:
         email = secrets["email"]
         password = secrets["password"]
-        rxtx(socket, "AUTH PLAIN\0%s\0%s" % (email, password))
+        rxtx(socket, "AUTH PLAIN")
+        rxtx(socket, email)
+        rxtx(socket, password)
     except Exception:
         pass
     rxtx(socket, "MAIL FROM:{}".format(secrets["email"]))
