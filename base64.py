@@ -9,24 +9,30 @@ def chunk(data, length):
 
 
 def encode(data):
+    print("AAAAA")
     override = 0
     if len(data) % 3 != 0:
         override = (len(data) + 3 - len(data) % 3) - len(data)
     data += b"\x00" * override
 
+    print("BBBBB")
     threechunks = chunk(data, 3)
 
+    print("CCCCC")
     binstring = ""
     for chunk in threechunks:
         for x in chunk:
             binstring += "{:0>8}".format(bin(x)[2:])
 
+    print("DDDDD")
     sixchunks = chunk(binstring, 6)
 
+    print("EEEEE")
     outstring = ""
     for element in sixchunks:
         outstring += CHARS[int(element, 2)]
 
+    print("FFFFF")
     outstring = outstring[:-override] + "=" * override
     return outstring
 
