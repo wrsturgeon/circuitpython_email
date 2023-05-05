@@ -75,7 +75,12 @@ def send(socket, to, subject, body):
     #         last_exception = e
     # # We could not login successfully.  Return result of last attempt.
     # raise last_exception
-    rxtx(socket, "AUTH PLAIN")
+    try:
+        email = secrets["email"]
+        password = secrets["password"]
+        rxtx(socket, "AUTH PLAIN\0%s\0%s" % (email, password))
+    except Exception:
+        pass
     rxtx(socket, "MAIL FROM:{}".format(secrets["email"]))
     rxtx(socket, "RCPT TO:{}".format(to))
     rxtx(socket, "DATA")
