@@ -83,7 +83,7 @@ def send(socket, to, subject, body):
         rxtx(socket, base64.encode(email))
         rxtx(socket, base64.encode(password))
     except Exception as e:
-        print(sys.exc_info(), e)
+        print(__import__("sys").exc_info(), e)
         time.sleep(5)
         pass
     rxtx(socket, "MAIL FROM:{}".format(secrets["email"]))
