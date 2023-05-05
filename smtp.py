@@ -5,20 +5,17 @@
 
 # Requires a `secrets.py` file--see the README.
 
-from . import base64
-import socketpool
-import wifi
-
 from secrets import secrets  # Your file!
 
-host = secrets["host"]
-port = secrets["port"]
+
+HOST = secrets["host"]
+PORT = secrets["port"]
 
 
 def init_connection(socket) -> None:
     """Connects to the `host` defined in `secrets.py`."""
-    print("Connecting to", secrets["host"])
-    addr = (secrets["host"], secrets["port"])
+    print("Connecting to", HOST)
+    addr = (HOST, PORT)
     socket.connect(addr)
     print("    done!")
 
@@ -77,11 +74,8 @@ def send(socket, to, subject, body):
     # # We could not login successfully.  Return result of last attempt.
     # raise last_exception
     try:
-        email = secrets["email"]
-        password = secrets["password"]
-        rxtx(socket, "AUTH PLAIN")
-        rxtx(socket, base64.b64_encode(email.encode("ascii")))
-        rxtx(socket, base64.b64_encode(password.encode("ascii")))
+        LOGIN_ENCRYPTED = secrets["login_encrypted"]
+        rxtx(socket, "AUTH PLAIN %s" % LOGIN_ENCRYPTED)
     except Exception as e:
         print(e)
         time.sleep(5)
