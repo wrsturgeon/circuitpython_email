@@ -4,11 +4,11 @@
 CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 
-def chunk(data, length):
+def b64_chunk(data, length):
     return [data[i : i + length] for i in range(0, len(data), length)]
 
 
-def encode(bytes):
+def b64_encode(bytes):
     print("AAAAA")
     override = 0
     if len(bytes) % 3 != 0:
@@ -16,7 +16,7 @@ def encode(bytes):
     bytes += b"\x00" * override
 
     print("BBBBB")
-    threechunks = chunk(bytes, 3)
+    threechunks = b64_chunk(bytes, 3)
 
     print("CCCCC")
     binstring = ""
@@ -25,7 +25,7 @@ def encode(bytes):
             binstring += "{:0>8}".format(bin(x)[2:])
 
     print("DDDDD")
-    sixchunks = chunk(binstring, 6)
+    sixchunks = b64_chunk(binstring, 6)
 
     print("EEEEE")
     outstring = ""
@@ -37,7 +37,7 @@ def encode(bytes):
     return outstring
 
 
-def decode(data):
+def b64_decode(data):
     override = data.count("=")
     data = data.replace("=", "A")
 
@@ -45,15 +45,10 @@ def decode(data):
     for char in data:
         binstring += "{:0>6b}".format(self.CHARS.index(char))
 
-    eightchunks = chunk(binstring, 8)
+    eightchunks = b64_chunk(binstring, 8)
 
     outbytes = b""
     for chunk in eightchunks:
         outbytes += bytes([int(chunk, 2)])
 
     return outbytes[:-override]
-
-
-if __name__ == "__main__":
-    b64 = Base64()
-    print(b64.decode(b64.encode(b"Hello")))
