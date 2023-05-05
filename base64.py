@@ -8,20 +8,15 @@ def chunk(data, length):
     return [data[i : i + length] for i in range(0, len(data), length)]
 
 
-def encode(data):
+def encode(bytes):
     print("AAAAA")
     override = 0
-    print("AAAAB")
-    if len(data) % 3 != 0:
-        print("AAAAC")
-        override = (len(data) + 3 - len(data) % 3) - len(data)
-        print("AAAAD")
-    print("AAAAE")
-    data += b"\x00" * override
-    print("AAAAF")
+    if len(bytes) % 3 != 0:
+        override = (len(bytes) + 3 - len(bytes) % 3) - len(bytes)
+    bytes += b"\x00" * override
 
     print("BBBBB")
-    threechunks = chunk(data, 3)
+    threechunks = chunk(bytes, 3)
 
     print("CCCCC")
     binstring = ""
